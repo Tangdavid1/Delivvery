@@ -40,7 +40,7 @@ while True:
         avg_color = tuple(current_color)
 
 # Store color mapping
-        colors = {str(avg_color): "green"}  # use str() for JSON compatibility
+        colors = {str(avg_color): "blue"}  # use str() for JSON compatibility
 
 
         with open("colors.json", "a") as file:
@@ -48,4 +48,5 @@ while True:
 
 
 input("Waiting. Press Enter to take Color Component Data")
+
 
