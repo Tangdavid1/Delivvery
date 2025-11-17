@@ -7,7 +7,7 @@ class DeliverySystem:
         self.belt = Motor(motor_port)
 
         #Make a sound once all of the 2 packages were dropped in the office
-        self.finish_sound = Sound(duration = 0.6, volume = 100, pitch = "A4")
+        self.finish_sound = Sound(duration = 0.6, volume = 120, pitch = "A4")
 
         #Make a sound after visiting all 4 offices
         self.mailroom_sound = Sound(duration = 1, volume = 100, pitch="C5")
