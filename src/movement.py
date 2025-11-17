@@ -71,7 +71,17 @@ def turn_90_left(left_motor: Motor, right_motor: Motor):
         wait_for_motor(right_motor)
     except IOError as error:
         print(error)
-    
+
+def turn_angle(left_motor: Motor, right_motor: Motor, angle_deg: int):
+    deg_to_move = int(angle_deg*ORIENT_TO_DEG)
+
+    try:
+        left_motor.set_position_relative(deg_to_move)
+        right_motor.set_position_relative(-deg_to_move)
+        wait_for_motor(right_motor)
+    except IOError as error:
+        print(error)
+        
 def turn_90_right(left_motor: Motor, right_motor: Motor):
     deg_to_move = int(200*ORIENT_TO_DEG)
 
