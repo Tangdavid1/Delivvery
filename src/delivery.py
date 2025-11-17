@@ -1,9 +1,11 @@
 from utils.brick import Motor
 from utils.sound import Sound
 from time import sleep
+import movement as mv
+import math
 
 class DeliverySystem: 
-    def __init__(self, motor_port="A"):
+    def __init__(self, motor_port="D"):
         self.belt = Motor(motor_port)
 
         #Make a sound once all of the 2 packages were dropped in the office
@@ -18,6 +20,7 @@ class DeliverySystem:
     def drop_package(self): 
         #Move forward to drop the package
         self.belt.set_position_relative(90)
+        mv.wait_for_motor(self.belt)
         sleep(0.4)
 
         #We would like to keep a track of the dropped pacakges
@@ -39,4 +42,28 @@ class DeliverySystem:
         self.mailroom_sound.play().wait_done()
 
 
-        
+if __name__ == "__main__":
+    # Initialize your system (motor on port D)
+    system = DeliverySystem("D")
+    print("TEST 1: Dropping first package")
+    system.drop_package()
+    sleep(1)
+
+    print("TEST 2: Dropping second package (should play finish sound)")
+    system.drop_package()
+    sleep(1)
+
+    print("Resetting for next office")
+    system.reset_for_next_office()
+    sleep(1)
+
+    print("TEST 3: Dropping two packages again")
+    system.drop_package()
+    sleep(1)
+    system.drop_package()
+    sleep(1)
+
+    print("TEST 4: Test mailroom sound")
+    system.play_sound_once_all_is_visited()
+
+    print("All tests finished.")
