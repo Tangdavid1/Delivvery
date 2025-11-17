@@ -10,19 +10,18 @@ color = EV3ColorSensor(1) # port S2
 
 #Angle constants
 
-frontleft_angle = 0
+frontleft_angle = -110
 
-backleft_angle = 0
+backleft_angle = 110
 
-frontright_angle = 0
+frontright_angle = 200
 
-backright_angle = 0
+backright_angle = -200
 
 colorScanned = False
 
 # Movement functions used:
 # go_forward_both_wheels(left_motor: Motor, right_motor: Motor, distance_cm: int)
-# turn_angle(left_motor: Motor, right_motor: Motor, angle_deg: int)
 
 # Color functions used:
 # computeDistance(rgb)
@@ -40,9 +39,7 @@ def scanningProcess(motor: Motor):
         return
 
     # Go back to original position by reverting turn left
-    movement.turn_90_left(motor, motor)
-    movement.turn_90_left(motor, motor)
-    movement.turn_90_left(motor, motor)
+    movement.turn_angle(motor, motor, backleft_angle)
 
     # turn right and scan for color
     movement.turn_90_right(motor, motor)
@@ -52,9 +49,7 @@ def scanningProcess(motor: Motor):
         return
 
     # Go back to original position by reverting turn right
-    movement.turn_90_right(motor, motor)
-    movement.turn_90_right(motor, motor)
-    movement.turn_90_right(motor, motor)
+    movement.turn_angle(motor, motor, backright_angle)
 
 def scanOffice(motor: Motor):
     global colorScanned
