@@ -63,22 +63,39 @@ def turn_180(left_motor: Motor, right_motor: Motor):
         print(error)
 
 def turn_90_left(left_motor: Motor, right_motor: Motor):
-    deg_to_move = int(-110*ORIENT_TO_DEG)
+    deg_to_move = int(200*ORIENT_TO_DEG)
 
     try:
-        left_motor.set_position_relative(deg_to_move)
-        right_motor.set_position_relative(-deg_to_move)
+        right_motor.set_position_relative(deg_to_move)
         wait_for_motor(right_motor)
     except IOError as error:
         print(error)
-    
+
+
+        
 def turn_90_right(left_motor: Motor, right_motor: Motor):
     deg_to_move = int(200*ORIENT_TO_DEG)
 
     try:
         left_motor.set_position_relative(deg_to_move)
-#        right_motor.set_position_relative(-deg_to_move)
         wait_for_motor(left_motor)
+    except IOError as error:
+        print(error)
+
+
+#Turn angle method. pass an angle and direction to turn
+
+def turn_angle(left_motor: Motor, right_motor: Motor, angle_deg: int, direction: str):
+    deg_to_move = int(angle_deg*ORIENT_TO_DEG)
+
+    try:
+        if direction == "left":
+            right_motor.set_position_relative(deg_to_move)
+            wait_for_motor(right_motor)
+
+        elif direction == "right":
+            left_motor.set_position_relative(deg_to_move)
+            wait_for_motor(left_motor)
     except IOError as error:
         print(error)
 
