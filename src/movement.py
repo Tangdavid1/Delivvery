@@ -1,3 +1,4 @@
+#### THIS FILE IS OBSOLETE !!!!! USE THE Wheels CLASS IN wheels.py INSTEAD !!! ####
 from utils.brick import Motor, TouchSensor
 import time
 import math
