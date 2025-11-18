@@ -1,55 +1,55 @@
-import color_detect as color
-import movement as mv
-from utils.brick import Motor, TouchSensor
-import time
-import math
+from wheels import Wheels
+from utils.brick import EV3ColorSensor, wait_ready_sensors
+
+ANGLE = 150
+
+def scanningProcess(wheels: Wheels, color_sensor: EV3ColorSensor) -> bool:
+    # turn left and scan for color
+    found_color = wheels.turn_angle_and_check_color(ANGLE, "left", "green", color_sensor)
+
+    if found_color:
+        return True
+
+    # Go back to original position by reverting turn left
+    wheels.turn_angle_and_check_color(-ANGLE, "left", "green", color_sensor)
+
+    # turn right and scan for color
+    found_color = wheels.turn_angle_and_check_color(ANGLE, "right", "green", color_sensor)
+
+    if found_color:
+        return True
+
+    # Go back to original position by reverting turn right
+    wheels.turn_angle_and_check_color(-ANGLE, "right", "green", color_sensor)
+    return False
+
+def scanOffice(wheels: Wheels, color_sensor: EV3ColorSensor):
+    if scanningProcess(wheels, color_sensor):
+        return
+
+    # if not color scanned, move forward and scan again
+    wheels.go_straight(30)
+    if scanningProcess(wheels, color_sensor):
+        return
+
+    # if still not scanned, move backwards and scan again
+    wheels.go_straight(-10)
+    if scanningProcess(wheels, color_sensor):
+        return
+
+    # if still not scanned, move backwards and scan again
+    wheels.go_straight(-10)
+    if scanningProcess(wheels, color_sensor):
+        return
+
+    # if still not scanned, move forward to original position
+    wheels.go_straight(-10)
+    if scanningProcess(wheels, color_sensor):
+        return
 
 
-TOUCH_SENSOR = TouchSensor(2)
-RIGHT_MOTOR = Motor("C")
-LEFT_MOTOR = Motor("B")
-CONVEYOR = Motor("D")
-
-WHEEL_DIAMETER_CM = 4.3
-WHEEL_RADIUS_CM = WHEEL_DIAMETER_CM/2
-AXLE_LENGTH_CM = 7.5
-ORIENT_TO_DEG = AXLE_LENGTH_CM/WHEEL_RADIUS_CM
-DISTANCE_TO_DEG = 360/(math.pi*WHEEL_DIAMETER_CM)
-
-POWER_LIMIT = 100
-SPEED_LIMIT = 720
-FWD_SPEED = 100
-MOTOR_POLL_DELAY = 0.05
-
-
-try:
-    print("movement test.")
-    mv.init_motor(LEFT_MOTOR)
-    mv.init_motor(RIGHT_MOTOR)
-    mv.init_motor(CONVEYOR)
-#        go_forward_single(CONVEYOR, 25)
-#       wait_for_motor(CONVEYOR)
-
-    #print("try to move forward")
-    mv.go_forward_both_wheels(LEFT_MOTOR, RIGHT_MOTOR, 50)
-
-    #print("try to rotate 180")
-    #turn_180(LEFT_MOTOR, RIGHT_MOTOR)
-
-    #print("try to rotate 90 left")
-    #turn_90_left(LEFT_MOTOR, RIGHT_MOTOR)
-
-    print("try to rotate 90 right")
-    mv.turn_90_right(LEFT_MOTOR, RIGHT_MOTOR)
-    mv.go_forward_both_wheels(LEFT_MOTOR, RIGHT_MOTOR, 80)
-    mv.turn_90_right(LEFT_MOTOR, RIGHT_MOTOR)
-    mv.go_forward_both_wheels(LEFT_MOTOR, RIGHT_MOTOR, 20)
-    mv.turn_90_right(LEFT_MOTOR, RIGHT_MOTOR)
-    mv.go_forward_both_wheels(LEFT_MOTOR, RIGHT_MOTOR, 10)
-    mv.turn_90_right(LEFT_MOTOR, RIGHT_MOTOR)
-    mv.go_forward_both_wheels(LEFT_MOTOR, RIGHT_MOTOR, 80)
-    mv.turn_90_right(LEFT_MOTOR, RIGHT_MOTOR)
-
-except KeyboardInterrupt:
-    print("Ended program")
-
+if __name__ == "__main__":
+    wheels = Wheels("B", "C")
+    color_sensor = EV3ColorSensor(2)
+    wait_ready_sensors()
+    scanOffice(wheels, color_sensor)
