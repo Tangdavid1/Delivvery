@@ -2,7 +2,7 @@ from delivery import DeliverySystem
 from time import sleep
 
 # Initialize your system (motor on port A)
-system = DeliverySystem("A")
+system = DeliverySystem("D")
 
 print("TEST 1: Dropping first package")
 system.drop_package()

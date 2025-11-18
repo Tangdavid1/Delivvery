@@ -58,27 +58,27 @@ G = [0.1172839506172815, 0.5778546712802685, 0.2934346556750594, 0.4397321428571
 B = [0.04938271604938167, 0.04844290657439399, 0.030554254295305495, 0.2321428571428597, 0.030888210818308705, 0.17302667234988325, 0.15686274509803871]
 
 
+if __name__ == "__main__":
+    color = EV3ColorSensor(1) # port S1
 
-color = EV3ColorSensor(1) # port S1
+    # waits until every previously defined sensor is ready
+    wait_ready_sensors()
 
-# waits until every previously defined sensor is ready
-wait_ready_sensors()
+    color.get_raw_value() # usually list [r,g,b,intensity], sometimes one number
 
-color.get_raw_value() # usually list [r,g,b,intensity], sometimes one number
+    input("Waiting. Press Enter to take Color ID Value")
 
-input("Waiting. Press Enter to take Color ID Value")
-
-temp = color.get_rgb()
-while(temp[0]==None or temp[1]==None or temp[2]==None):
+    temp = color.get_rgb()
+    while(temp[0]==None or temp[1]==None or temp[2]==None):
         temp=color.get_rgb()
-print(temp)
-closest_color = computeDistance(temp)
+    print(temp)
+    closest_color = computeDistance(temp)
 
 
-print(closest_color)
+    print(closest_color)
 
-#input("Waiting. Press Enter to take Color Component Data")
+    #input("Waiting. Press Enter to take Color Component Data")
 
 
-#rgb_list = color.get_rgb()
-#print(rgb_list)
+    #rgb_list = color.get_rgb()
+    #print(rgb_list)
