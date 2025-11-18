@@ -1,4 +1,4 @@
-from utils.brick import Motor, TouchSensor, EV3ColorSensor
+from utils.brick import Motor, EV3ColorSensor
 import time
 import math
 import color_detect
