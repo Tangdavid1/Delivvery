@@ -1,7 +1,6 @@
 from utils.brick import Motor
 from utils.sound import Sound
 from time import sleep
-import movement as mv
 import math
 
 class DeliverySystem: 
@@ -17,10 +16,19 @@ class DeliverySystem:
         #We would like to keep track of how many packages were dropped
         self.count = 0
 
+        #Constants
+        self.MOTOR_POLL_DELAY = 0.05
+
+    def wait_for_motor(self):
+        while math.isclose(self.belt.get_speed(), 0):
+            sleep(self.MOTOR_POLL_DELAY)
+        while not math.isclose(self.belt.get_speed(), 0):
+            sleep(self.MOTOR_POLL_DELAY)
+
     def drop_package(self): 
         #Move forward to drop the package
         self.belt.set_position_relative(90)
-        mv.wait_for_motor(self.belt)
+        self.wait_for_motor()
         sleep(0.4)
 
         #We would like to keep a track of the dropped pacakges
