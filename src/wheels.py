@@ -21,7 +21,7 @@ class Wheels:
         self.FWD_SPEED = 100
         self.MOTOR_POLL_DELAY = 0.05
         # Constants for accurate movement
-        self.DEG_180_TURN = 200
+        self.DEG_180_TURN = 195
 
         try:
             self.RIGHT_MOTOR.reset_encoder()

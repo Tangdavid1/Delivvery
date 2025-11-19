@@ -24,31 +24,21 @@ def scanningProcess(wheels: Wheels, color_sensor: EV3ColorSensor, color: str) ->
     return False
 
 
-def scanOffice(wheels: Wheels, color_sensor: EV3ColorSensor) -> bool:
+def scanOffice(wheels: Wheels, color_sensor: EV3ColorSensor) -> int:
     if scanningProcess(wheels, color_sensor, "red"):
-        return True
+        return 0
 
     # if not color scanned, move forward and scan again
-    wheels.go_straight(30)
-    if scanningProcess(wheels, color_sensor, "green"):
-        return True
-
-    # if still not scanned, move backwards and scan again
-    wheels.go_straight(-10)
-    if scanningProcess(wheels, color_sensor, "green"):
-        return True
-
-    # if still not scanned, move backwards and scan again
-    wheels.go_straight(-10)
-    if scanningProcess(wheels, color_sensor, "green"):
-        return True
-
-    # if still not scanned, move forward to original position
-    wheels.go_straight(-10)
-    if scanningProcess(wheels, color_sensor, "green"):
-        return True
+    wheels.go_straight(20)
     
-    return False
+    for i in range(4):
+        if scanningProcess(wheels, color_sensor, "green"):
+            return 1
+
+        # if still not scanned, move backwards and scan again
+        wheels.go_straight(-3)
+
+    return -1
 
 
 if __name__ == "__main__":
