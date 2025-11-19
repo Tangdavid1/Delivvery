@@ -35,7 +35,7 @@ def computeDistance(rgb):
         normalized_b = rgb[2]/(intensity)
         for i in range(len(R)):
                 D = math.sqrt(pow((normalized_r-R[i]),2)+pow((normalized_g-G[i]),2)+pow((normalized_b-B[i]),2))
-                print(f"Color: {i} , {D}")
+                #print(f"Color: {i} , {D}")
                 if(D<min_dist):
                         color = i
                         min_dist = D
