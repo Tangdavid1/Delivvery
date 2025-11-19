@@ -27,7 +27,7 @@ class DeliverySystem:
 
     def drop_package(self): 
         #Move forward to drop the package
-        self.belt.set_position_relative(90)
+        self.belt.set_position_relative(100)
         self.wait_for_motor()
         sleep(0.4)
 
