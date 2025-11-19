@@ -99,26 +99,41 @@ class Wheels:
 
 
     #Turn angle method. pass an angle and direction to turn
-    def turn_angle_and_check_color(self, angle_deg: int, direction: str, color, sensor) -> bool:
+    def turn_angle_and_check_color(self, angle_deg: int, direction: str, color, sensor) -> tuple[bool, int]:
         deg_to_move = int(angle_deg*self.ORIENT_TO_DEG)
 
         try:
             if direction == "left":
+                pos_before = self.RIGHT_MOTOR.get_encoder()
                 self.RIGHT_MOTOR.set_position_relative(deg_to_move)
                 found_color = self.wait_for_motor_while_check_color(self.RIGHT_MOTOR, color, sensor)
+                pos_after = self.RIGHT_MOTOR.get_encoder()
+                difference = int(pos_after - pos_before)
 
             elif direction == "right":
+                pos_before = self.LEFT_MOTOR.get_encoder()
                 self.LEFT_MOTOR.set_position_relative(deg_to_move)
                 found_color = self.wait_for_motor_while_check_color(self.LEFT_MOTOR, color, sensor)
+                pos_after = self.LEFT_MOTOR.get_encoder()
+                difference = int(pos_after - pos_before)
             
             if found_color:
                 print(f"Found {color}!")
-                return True
+                return (True, difference)
             
-            return False
+            return (False, 0)
         except IOError as error:
             print(error)
-
+    
+    
+    def reverse_previous_position(self, direction: str, difference: int):
+        if direction == "left":
+            self.RIGHT_MOTOR.set_position_relative(-difference)
+            self.wait_for_motor(self.RIGHT_MOTOR)
+        elif direction == "right":
+            self.LEFT_MOTOR.set_position_relative(-difference)
+            self.wait_for_motor(self.LEFT_MOTOR)
+            
 
 if __name__ == "__main__":
     #Testing movement
