@@ -19,9 +19,15 @@ if __name__ == "__main__":
     wait_ready_sensors()
 
     # process an office: scan for red, then start scanning for green, if green found, turn 180 and drop package
-    if office.scanOffice(wheels, color_sensor) == 1:
+    result = office.scanOffice(wheels, color_sensor)
+    if result[0] > 0: #when green detected
         wheels.go_straight(-7)
         wheels.turn_180(True)
         delivery.drop_package()
+        wheels.turn_180(False)
+        wheels.go_straight(7)
+        wheels.reverse_previous_position(result[1], result[2])
+        wheels.go_straight(-result[0])
+
 
     
