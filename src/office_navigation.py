@@ -7,7 +7,7 @@ import time
 import math
 
 ## Constants to define: 92(23 * 3), 23, 69 (23*3), 46 (23*2), 5
-BLOCK_CM = 23
+BLOCK_CM = 15
 OFFICE_ENTRANCE_DISTANCE_CM = 2
 
 #Counters
@@ -30,7 +30,7 @@ class NavigationSystem:
         """
         Exit the office by reversing the entrance process.
         """
-        self.wh.turn_90_left()
+        self.wh.turn_90_left() #TODO CHANGE BY TURN LEFT IN REVERSE
 
     
     def go_to_first_office(self):
@@ -120,7 +120,7 @@ class NavigationSystem:
         '''
         Return to mailroom after delivering at office 2.
         '''
-        self.wh.turn_90_right()
+        self.wh.turn_90_right() #TODO CHANGE TO TURN BACK RIGHT
 
         self.wh.go_straight(BLOCK_CM)
 
