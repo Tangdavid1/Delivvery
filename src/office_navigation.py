@@ -1,23 +1,25 @@
-from utils.brick import Motor, EV3ColorSensor
+from utils.brick import Motor, EV3ColorSensor, wait_ready_sensors
 
 from wheels import Wheels
+from delivery import DeliverySystem
 import office_scanningV2 as os
 import color_detect
 import time 
 import math
 
 ## Constants to define: 92(23 * 3), 23, 69 (23*3), 46 (23*2), 5
-BLOCK_CM = 15
+BLOCK_CM = 23
 OFFICE_ENTRANCE_DISTANCE_CM = 2
 
 #Counters
 
-
 class NavigationSystem:
-    def __init__(self, left_motor_port="B", right_motor_port="C", color_sensor_port=2):
-        self.wh = Wheels("B", "C")
-        self.color_sensor = EV3ColorSensor(color_sensor_port)
+    def __init__(self, wheels: Wheels, delivery: DeliverySystem, color_sensor: EV3ColorSensor):
+        self.wh = wheels
+        self.color_sensor = color_sensor
         self.office_entered = 0
+        self.delivery = delivery
+        self.count = 0
 
     def enter_office(self):
         """
@@ -30,7 +32,7 @@ class NavigationSystem:
         """
         Exit the office by reversing the entrance process.
         """
-        self.wh.turn_90_left() #TODO CHANGE BY TURN LEFT IN REVERSE
+        self.wh.turn_90_left_back()
 
     
     def go_to_first_office(self):
@@ -53,7 +55,7 @@ class NavigationSystem:
         #detected_color = color_detect.detect_color(self.color_sensor)
         #print(f"Arrived at office with color: {detected_color}")
 
-        os.scanOffice(self.wh, self.color_sensor)
+        self.scan_room()
 
         self.exit_office()
 
@@ -73,7 +75,7 @@ class NavigationSystem:
 
         self.enter_office()
 
-        os.scanOffice(self.wh, self.color_sensor)
+        self.scan_room()
 
         if (self.count == 2) :
             self.return_to_mailroom_from_office2()
@@ -94,7 +96,7 @@ class NavigationSystem:
 
         self.enter_office()
 
-        os.scanOffice(self.wh, self.color_sensor)
+        self.scan_room()
 
         if (self.count == 2) :
             self.return_to_mailroom_from_office3()
@@ -112,7 +114,7 @@ class NavigationSystem:
       
         self.enter_office()
 
-        os.scanOffice(self.wh, self.color_sensor)
+        self.scan_room()
 
         self.return_to_mailroom_from_office4()
 
@@ -120,7 +122,7 @@ class NavigationSystem:
         '''
         Return to mailroom after delivering at office 2.
         '''
-        self.wh.turn_90_right() #TODO CHANGE TO TURN BACK RIGHT
+        self.wh.turn_90_right_back()
 
         self.wh.go_straight(BLOCK_CM)
 
@@ -155,6 +157,23 @@ class NavigationSystem:
 
         self.wh.go_straight(BLOCK_CM * 2)
 
+    def scan_room(self):
+        result = os.scanOffice(self.wh, self.color_sensor)
+        if result[0] > 0: #when green detected
+            self.wh.go_straight(-7)
+            self.wh.turn_180(True)
+            self.delivery.drop_package()
+            self.wh.turn_180(False)
+            self.wh.go_straight(7)
+            self.wh.reverse_previous_position(result[1], result[2])
+            self.wh.go_straight(-result[0])
+
 if __name__ == "__main__":
-    nav = NavigationSystem("B", "C", 2)
+    wheels = Wheels("B", "C")
+    delivery = DeliverySystem("D")
+    color_sensor = EV3ColorSensor(2)
+    wait_ready_sensors()
+
+    nav = NavigationSystem(wheels, delivery, color_sensor)
     nav.go_to_first_office()
+        
