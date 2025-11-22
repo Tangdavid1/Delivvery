@@ -22,6 +22,7 @@ class Wheels:
         self.MOTOR_POLL_DELAY = 0.05
         # Constants for accurate movement
         self.DEG_180_TURN = 195
+        self.DEG_90_TURN = 180
 
         try:
             self.RIGHT_MOTOR.reset_encoder()
@@ -98,6 +99,26 @@ class Wheels:
             print(error)
 
 
+    def turn_90_left_back(self):
+        deg_to_move = int(-self.DEG_90_TURN*self.ORIENT_TO_DEG)
+
+        try:
+            self.LEFT_MOTOR.set_position_relative(deg_to_move)
+            self.wait_for_motor(self.LEFT_MOTOR)
+        except IOError as error:
+            print(error)
+
+
+    def turn_90_right_back(self):
+        deg_to_move = int(-self.DEG_90_TURN*self.ORIENT_TO_DEG)
+
+        try:
+            self.RIGHT_MOTOR.set_position_relative(deg_to_move)
+            self.wait_for_motor(self.RIGHT_MOTOR)
+        except IOError as error:
+            print(error)
+
+
     #Turn angle method. pass an angle and direction to turn
     def turn_angle_and_check_color(self, angle_deg: int, direction: str, color, sensor) -> tuple[bool, int]:
         deg_to_move = int(angle_deg*self.ORIENT_TO_DEG)
@@ -138,12 +159,15 @@ class Wheels:
 if __name__ == "__main__":
     #Testing movement
     wheels = Wheels("B", "C")
-    wheels.turn_90_left()
-    wheels.turn_90_left()
-    wheels.turn_90_right()
-    wheels.turn_90_right()
+    wheels.turn_90_left_back()
+    wheels.turn_90_left_back()
+    wheels.turn_90_right_back()
+    wheels.turn_90_right_back()
     wheels.turn_180(True)
     wheels.turn_180(False)
+    wheels.turn_90_left()
+    wheels.turn_90_right()
+    
 
     #Testing moving and scanning
     
