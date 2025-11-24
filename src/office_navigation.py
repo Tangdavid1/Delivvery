@@ -2,10 +2,7 @@ from utils.brick import Motor, EV3ColorSensor, wait_ready_sensors
 
 from wheels import Wheels
 from delivery import DeliverySystem
-import office_scanningV2 as os
-import color_detect
-import time 
-import math
+import office_scanning as os
 
 ## Constants to define: 92(23 * 3), 23, 69 (23*3), 46 (23*2), 5
 BLOCK_CM = 23
