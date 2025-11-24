@@ -118,6 +118,19 @@ class Wheels:
         except IOError as error:
             print(error)
 
+     #Turn angle method. pass an angle and direction to turn       
+    def turn_angle(self, angle_deg: int, direction: str):
+        deg_to_move = int(angle_deg*self.ORIENT_TO_DEG)
+
+        try:
+            if direction == "left":
+                self.RIGHT_MOTOR.set_position_relative(deg_to_move)
+                self.wait_for_motor(self.RIGHT_MOTOR)
+            elif direction == "right":
+                self.LEFT_MOTOR.set_position_relative(deg_to_move)
+                self.wait_for_motor(self.LEFT_MOTOR)
+        except IOError as error:
+            print(error)
 
     #Turn angle method. pass an angle and direction to turn
     def turn_angle_and_check_color(self, angle_deg: int, direction: str, color, sensor) -> tuple[bool, int]:
