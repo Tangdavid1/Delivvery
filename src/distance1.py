@@ -22,7 +22,7 @@ side_start_time = time.time()
 #Last ultrasonic measurement     
 last_ultrasonic_check_time = time.time()   
 
-class ultrasonicSensor 
+ 
 def forward():
     left_motor.set_power(40)
     right_motor.set_power(40)
@@ -111,6 +111,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         stop()
         print("Stopped.")
+
 
 
 
