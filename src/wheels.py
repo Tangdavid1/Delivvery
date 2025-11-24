@@ -22,6 +22,7 @@ class Wheels:
         self.MOTOR_POLL_DELAY = 0.05
         # Constants for accurate movement
         self.DEG_180_TURN = 195
+        self.DEG_90_TURN = 180
 
         try:
             self.RIGHT_MOTOR.reset_encoder()
@@ -98,37 +99,75 @@ class Wheels:
             print(error)
 
 
-    #Turn angle method. pass an angle and direction to turn
-    def turn_angle_and_check_color(self, angle_deg: int, direction: str, color, sensor) -> bool:
-        deg_to_move = int(angle_deg*self.ORIENT_TO_DEG)
+    def turn_90_left_back(self):
+        deg_to_move = int(-self.DEG_90_TURN*self.ORIENT_TO_DEG)
 
         try:
-            if direction == "left":
-                self.RIGHT_MOTOR.set_position_relative(deg_to_move)
-                found_color = self.wait_for_motor_while_check_color(self.RIGHT_MOTOR, color, sensor)
-
-            elif direction == "right":
-                self.LEFT_MOTOR.set_position_relative(deg_to_move)
-                found_color = self.wait_for_motor_while_check_color(self.LEFT_MOTOR, color, sensor)
-            
-            if found_color:
-                print(f"Found {color}!")
-                return True
-            
-            return False
+            self.LEFT_MOTOR.set_position_relative(deg_to_move)
+            self.wait_for_motor(self.LEFT_MOTOR)
         except IOError as error:
             print(error)
 
 
+    def turn_90_right_back(self):
+        deg_to_move = int(-self.DEG_90_TURN*self.ORIENT_TO_DEG)
+
+        try:
+            self.RIGHT_MOTOR.set_position_relative(deg_to_move)
+            self.wait_for_motor(self.RIGHT_MOTOR)
+        except IOError as error:
+            print(error)
+
+
+    #Turn angle method. pass an angle and direction to turn
+    def turn_angle_and_check_color(self, angle_deg: int, direction: str, color, sensor) -> tuple[bool, int]:
+        deg_to_move = int(angle_deg*self.ORIENT_TO_DEG)
+
+        try:
+            if direction == "left":
+                pos_before = self.RIGHT_MOTOR.get_encoder()
+                self.RIGHT_MOTOR.set_position_relative(deg_to_move)
+                found_color = self.wait_for_motor_while_check_color(self.RIGHT_MOTOR, color, sensor)
+                pos_after = self.RIGHT_MOTOR.get_encoder()
+                difference = int(pos_after - pos_before)
+
+            elif direction == "right":
+                pos_before = self.LEFT_MOTOR.get_encoder()
+                self.LEFT_MOTOR.set_position_relative(deg_to_move)
+                found_color = self.wait_for_motor_while_check_color(self.LEFT_MOTOR, color, sensor)
+                pos_after = self.LEFT_MOTOR.get_encoder()
+                difference = int(pos_after - pos_before)
+            
+            if found_color:
+                print(f"Found {color}!")
+                return (True, difference)
+            
+            return (False, 0)
+        except IOError as error:
+            print(error)
+    
+    
+    def reverse_previous_position(self, direction: str, difference: int):
+        if direction == "left":
+            self.RIGHT_MOTOR.set_position_relative(-difference)
+            self.wait_for_motor(self.RIGHT_MOTOR)
+        elif direction == "right":
+            self.LEFT_MOTOR.set_position_relative(-difference)
+            self.wait_for_motor(self.LEFT_MOTOR)
+            
+
 if __name__ == "__main__":
     #Testing movement
     wheels = Wheels("B", "C")
-    wheels.turn_90_left()
-    wheels.turn_90_left()
-    wheels.turn_90_right()
-    wheels.turn_90_right()
+    wheels.turn_90_left_back()
+    wheels.turn_90_left_back()
+    wheels.turn_90_right_back()
+    wheels.turn_90_right_back()
     wheels.turn_180(True)
     wheels.turn_180(False)
+    wheels.turn_90_left()
+    wheels.turn_90_right()
+    
 
     #Testing moving and scanning
     
