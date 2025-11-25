@@ -16,8 +16,8 @@ class Wheels:
         # More constants regarding motors
         self.ORIENT_TO_DEG = self.AXLE_LENGTH_CM/self.WHEEL_RADIUS_CM
         self.DISTANCE_TO_DEG = 360/(math.pi*self.WHEEL_DIAMETER_CM)
-        self.POWER_LIMIT = 80
-        self.SPEED_LIMIT = 600
+        self.POWER_LIMIT = 60
+        self.SPEED_LIMIT = 500
         self.FWD_SPEED = 100
         self.MOTOR_POLL_DELAY = 0.05
         # Constants for accurate movement
