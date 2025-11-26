@@ -1,13 +1,17 @@
 #import dependencies
+from office_navigation import NavigationSystem
 from utils.brick import EV3ColorSensor, wait_ready_sensors
 from wheels import Wheels
 from delivery import DeliverySystem
-import office_scanningV2 as office
+import office_scanning as office
 
 class Robot:
-    def __init__(self,):
-        pass
-        self.touch_sensor = TouchSensor(1)
+    def __init__(self, left_wheel_port: str, right_wheel_port: str, conveyor_belt_port: str, color_sensor_port: int, touch_sensor_port: int):
+        self.WHEELS = Wheels(left_wheel_port, right_wheel_port)
+        self.DELIVERY_SYSTEM = DeliverySystem(conveyor_belt_port)
+        self.COLOR_SENSOR = EV3ColorSensor(color_sensor_port)
+        self.NAVIGATION_SYSTEM = NavigationSystem(self.WHEELS, self.DELIVERY_SYSTEM, self.COLOR_SENSOR)
+    
     def play():
         # run everything
         pass

@@ -2,13 +2,10 @@ from utils.brick import Motor, EV3ColorSensor, wait_ready_sensors
 
 from wheels import Wheels
 from delivery import DeliverySystem
-import office_scanningV2 as os
-import color_detect
-import time 
-import math
+import office_scanning as os
 
 ## Constants to define: 92(23 * 3), 23, 69 (23*3), 46 (23*2), 5
-BLOCK_CM = 23
+BLOCK_CM = 22
 OFFICE_ENTRANCE_DISTANCE_CM = 2
 
 #Counters
@@ -20,13 +17,17 @@ class NavigationSystem:
         self.office_entered = 0
         self.delivery = delivery
         self.count = 0
+        # MOVEMENT CONSTANTS
+        self.D1 = 90
+        self.D2 = 77
+        self.CORNER_TO_ENTRANCE = 10
+        self.D3 = 44
 
     def enter_office(self):
         """
         Perform a 90-degree turn at a corner, and advance to the entrance of an office.
         """
         self.wh.turn_90_right()
-        self.wh.go_straight(OFFICE_ENTRANCE_DISTANCE_CM)
 
     def exit_office(self):
         """
@@ -42,12 +43,12 @@ class NavigationSystem:
         self.office_entered += 1
 
         # Move forward towards the corner
-        self.wh.go_straight(BLOCK_CM * 4)
+        self.wh.go_straight(self.D1)
 
         # Turn the corner and advance towards the entrance
         self.wh.turn_90_right()
 
-        self.wh.go_straight(12)
+        self.wh.go_straight(self.CORNER_TO_ENTRANCE)
 
         self.enter_office()
 
@@ -67,11 +68,11 @@ class NavigationSystem:
         '''
         self.office_entered += 1
         
-        self.wh.go_straight(BLOCK_CM * 3)
+        self.wh.go_straight(self.D2)
 
         self.wh.turn_90_right()
 
-        self.wh.go_straight(BLOCK_CM)
+        self.wh.go_straight(self.CORNER_TO_ENTRANCE)
 
         self.enter_office()
 
@@ -88,11 +89,11 @@ class NavigationSystem:
         '''
         self.office_entered += 1
 
-        self.wh.go_straight(BLOCK_CM * 3)
+        self.wh.go_straight(self.D2)
 
         self.wh.turn_90_right()
 
-        self.wh.go_straight(BLOCK_CM)
+        self.wh.go_straight(self.CORNER_TO_ENTRANCE)
 
         self.enter_office()
 
@@ -110,7 +111,7 @@ class NavigationSystem:
         '''
         self.office_entered += 1
 
-        self.wh.go_straight(BLOCK_CM * 2)
+        self.wh.go_straight(self.D3)
       
         self.enter_office()
 
@@ -128,7 +129,7 @@ class NavigationSystem:
 
         self.wh.turn_90_left()
 
-        self.wh.go_straight(BLOCK_CM * 2)
+        self.wh.go_straight((BLOCK_CM * 2)-5)
 
         self.wh.turn_90_left()
 
@@ -149,7 +150,7 @@ class NavigationSystem:
         '''
         Return to mailroom after delivering at office 4.
         '''
-        self.wh.turn_90_right()
+        self.wh.turn_90_right_back()
 
         self.wh.go_straight(BLOCK_CM)
         
