@@ -57,6 +57,17 @@ R = [0.8333333333333433, 0.3737024221453372, 0.676011090029638, 0.328125, 0.5579
 G = [0.1172839506172815, 0.5778546712802685, 0.2934346556750594, 0.43973214285715145, 0.4111973647711494, 0.3905860748375745, 0.4313725490196124]
 B = [0.04938271604938167, 0.04844290657439399, 0.030554254295305495, 0.2321428571428597, 0.030888210818308705, 0.17302667234988325, 0.15686274509803871]
 
+def getColor(colorSensor):
+
+        # waits until every previously defined sensor is ready
+        wait_ready_sensors()
+
+        temp = color.get_rgb()
+        while(temp[0]==None or temp[1]==None or temp[2]==None):
+                temp=color.get_rgb()
+        closest_color = computeDistance(temp)
+        return closest_color
+
 
 if __name__ == "__main__":
     color = EV3ColorSensor(1) # port S1
@@ -69,7 +80,7 @@ if __name__ == "__main__":
     input("Waiting. Press Enter to take Color ID Value")
 
     temp = color.get_rgb()
-    while(temp[0]==None or temp[1]==None or temp[2]==None):
+    while(temp[0]==None or temp[1]==None or temp[2]==None or (temp[0]+temp[1]+temp[2]==0)):
         temp=color.get_rgb()
     print(temp)
     closest_color = computeDistance(temp)
