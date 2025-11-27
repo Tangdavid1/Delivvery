@@ -34,9 +34,8 @@ class DeliverySystem:
         #We would like to keep a track of the dropped pacakges
         self.count +=1
 
-        #Only play the sound when both packages are delivered 
-        if self.count == 2:
-            self.finish_sound.play().wait_done()
+        #Play the sound when a package is delivered 
+        self.finish_sound.play().wait_done()
     
     def reset_for_next_office(self):
         """

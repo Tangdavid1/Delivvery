@@ -1,4 +1,4 @@
-from utils.brick import Motor, EV3ColorSensor
+from utils.brick import Motor, EV3ColorSensor, EV3GyroSensor, wait_ready_sensors
 import time
 import math
 import color_utils.color_detect as color_detect
@@ -22,7 +22,7 @@ class Wheels:
         self.MOTOR_POLL_DELAY = 0.05
         # Constants for accurate movement
         self.DEG_180_TURN = 195
-        self.DEG_90_TURN = 180
+        self.DEG_90_TURN = 185
 
         try:
             self.RIGHT_MOTOR.reset_encoder()
@@ -35,6 +35,18 @@ class Wheels:
         except IOError as error:
             print(error)
     
+    def initialize_motors(self):
+        try:
+            self.RIGHT_MOTOR.reset_encoder()
+            self.RIGHT_MOTOR.set_limits(self.POWER_LIMIT, self.SPEED_LIMIT)
+            self.RIGHT_MOTOR.set_power(0)
+
+            self.LEFT_MOTOR.reset_encoder()
+            self.LEFT_MOTOR.set_limits(self.POWER_LIMIT, self.SPEED_LIMIT)
+            self.LEFT_MOTOR.set_power(0)
+        except IOError as error:
+            print(error)
+
     
     def wait_for_motor(self, motor: Motor):
         """
@@ -75,6 +87,73 @@ class Wheels:
             self.wait_for_motor(self.RIGHT_MOTOR)
         except IOError as error:
             print(error)
+
+    
+    def go_straight_gyro(self, gyro: EV3GyroSensor, time_to_move, number_turns):
+        """
+        Goes straight and with good orientation thanks to the gyro sensor
+        """
+        #The ultrasonic is ON for the first 10 seconds
+        side_ultrasonic_duration = time_to_move
+        #Check ultrasonic every 2 sec
+        check_interval = 0.01
+
+        state = "side_ultrasonic_on"
+        #When the side started
+        side_start_time = time.time()
+        #Last ultrasonic measurement
+        last_ultrasonic_check_time = time.time()
+
+        desiredDist = 4.4
+        baseDeg = 360
+        prev_distance= None
+
+        def forward():
+            self.LEFT_MOTOR.set_dps(baseDeg)
+            self.RIGHT_MOTOR.set_dps(baseDeg)
+
+        def deltaAdjust(angle, num_turns):
+            ang = angle[0] + (90 * num_turns)
+            print(ang)
+            # Ignore bad data
+            Kp = 5
+            correction = Kp *ang
+
+            self.LEFT_MOTOR.set_dps(baseDeg + correction)
+            self.RIGHT_MOTOR.set_dps(baseDeg - correction)
+
+
+        def stop():
+            self.LEFT_MOTOR.set_dps(0)
+            self.RIGHT_MOTOR.set_dps(0)
+            self.initialize_motors()
+
+        try:
+            forward()
+            while True:
+                #State 1(Ultrasonic Sensor is ON)
+                #Ultrasonic sesnor is ON for the first 10 seconds
+                if state == "side_ultrasonic_on":
+                    now = time.time()
+
+                    if now - last_ultrasonic_check_time >= check_interval:
+                        #distance = ultrasonic.get_value()
+                        angle = gyro.get_value()
+                        if angle is not None:
+                     #       print("Angle:", angle, "deg")
+
+                            deltaAdjust(angle, number_turns)
+                        #Reset the timer
+                        last_ultrasonic_check_time = now
+
+                    #Turn off the ultrasonic sensor after 10 seconds
+                    if now - side_start_time >= side_ultrasonic_duration:
+                        stop()
+                        break
+
+        except KeyboardInterrupt:
+            stop()
+            print("Stopped.")
 
 
     def turn_180(self, right_left_not: bool):
@@ -188,7 +267,7 @@ class Wheels:
             
             if found_color:
                 print(f"Found {color}!")
-                return (True, difference)
+                return (True, difference-2)
             
             return (False, 0)
         except IOError as error:
@@ -207,15 +286,13 @@ class Wheels:
 if __name__ == "__main__":
     #Testing movement
     wheels = Wheels("B", "C")
+    gyro = EV3GyroSensor(1)
+    wait_ready_sensors()
+    
+    # Test moving straight with gyro
+    #wheels.go_straight_gyro(gyro, 6, 0)
     wheels.turn_90_left_back()
-    wheels.turn_90_left_back()
-    wheels.turn_90_right_back()
-    wheels.turn_90_right_back()
-    wheels.turn_180(True)
-    wheels.turn_180(False)
-    wheels.turn_90_left()
     wheels.turn_90_right()
-    
-
-    #Testing moving and scanning
-    
+    wheels.turn_90_right_back()
+    wheels.turn_90_left()
+    #wheels.go_straight_gyro(gyro, 6, 1)

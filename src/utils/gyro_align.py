@@ -7,10 +7,6 @@ from utils.brick import EV3ColorSensor
 left_motor = Motor("B")
 #Right wheel is on port = "C"
 right_motor = Motor("C")
-#The ultrasonic sensor is on port 1
-#ultrasonic = EV3UltrasonicSensor(1)
-#The color sensor is on port 2
-color=EV3ColorSensor(2)
 
 gyro = EV3GyroSensor(1)
 
@@ -37,10 +33,8 @@ def forward():
 def deltaAdjust(angle):
     ang = angle[0]
     # Ignore bad data
-
     Kp = 2
     correction = Kp *ang
-
 
     left_motor.set_dps(baseDeg - correction)
     right_motor.set_dps(baseDeg + correction)
@@ -76,32 +70,6 @@ if __name__ == "__main__":
                     print("10 seconds done so it will be turning right")
                     state = "turning"
                     rotate_start_time = time.time()
-
-            #State 2(Ultrasonic is OFF)
-            #Rotate Right
-            # elif state == "turning":
-            #     rotate_right()
-
-            #     if time.time() - rotate_start_time >= 1.2:
-            #         print("Rotation finished.")
-            #         stop()
-            #         state = "wait for the intersection"
-
-            # #State 3
-            # #Keep on moving forward until we reach an intersection
-            # elif state == "wait for the intersection":
-            #     #the ultrasonic is OFF until it reaches an intersection
-            #     forward()
-
-            #     #if black line is detected
-            #     if color.get_color_name()=="BLACK":
-            #         print("The intersection is found so ultrasonic sensor is back ON")
-            #         #Ultrasonic is ON
-            #         state = "side_ultrasonic_on"
-            #         side_start_time = time.time()
-            #         last_ultrasonic_check_time = time.time()
-
-
 
     except KeyboardInterrupt:
         stop()
