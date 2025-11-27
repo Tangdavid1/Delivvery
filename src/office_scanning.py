@@ -41,7 +41,6 @@ def scanOffice(wheels: Wheels, color_sensor: EV3ColorSensor) -> tuple[int, str, 
         # if still not scanned, move backwards and scan again
         wheels.go_straight(-3)
 
-    wheels.go_straight(-3)
 
     return (-1, "none", 0)
 

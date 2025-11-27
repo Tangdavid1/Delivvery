@@ -267,7 +267,7 @@ class Wheels:
             
             if found_color:
                 print(f"Found {color}!")
-                return (True, difference-2)
+                return (True, difference)
             
             return (False, 0)
         except IOError as error:

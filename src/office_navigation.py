@@ -153,11 +153,11 @@ class NavigationSystem:
 
         self.wh.turn_90_left()
 
-        self.wh.go_straight((BLOCK_CM * 2)-5)
+        self.wh.go_straight(30)
 
         self.wh.turn_90_left()
 
-        self.wh.go_straight(BLOCK_CM * 2)
+        self.wh.go_straight(30)
 
     def return_to_mailroom_from_office3(self):
         '''
