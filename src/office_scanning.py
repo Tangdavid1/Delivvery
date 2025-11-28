@@ -11,7 +11,7 @@ def scanningProcess(wheels: Wheels, color_sensor: EV3ColorSensor, color: str) ->
         return (True, "left", difference)
 
     # Go back to original position by reverting turn left
-    wheels.turn_angle_and_check_color(-(ANGLE-6), "left", color, color_sensor)
+    wheels.turn_angle_and_check_color(-(ANGLE), "left", color, color_sensor)
 
     # turn right and scan for color
     found_color, difference = wheels.turn_angle_and_check_color(ANGLE, "right", color, color_sensor)
@@ -20,7 +20,7 @@ def scanningProcess(wheels: Wheels, color_sensor: EV3ColorSensor, color: str) ->
         return (True, "right", difference)
 
     # Go back to original position by reverting turn right
-    wheels.turn_angle_and_check_color(-(ANGLE-6), "right", color, color_sensor)
+    wheels.turn_angle_and_check_color(-(ANGLE), "right", color, color_sensor)
     return (False, "none", 0)
 
 

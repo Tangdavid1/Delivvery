@@ -16,13 +16,13 @@ class Wheels:
         # More constants regarding motors
         self.ORIENT_TO_DEG = self.AXLE_LENGTH_CM/self.WHEEL_RADIUS_CM
         self.DISTANCE_TO_DEG = 360/(math.pi*self.WHEEL_DIAMETER_CM)
-        self.POWER_LIMIT = 60
-        self.SPEED_LIMIT = 500
+        self.POWER_LIMIT = 45
+        self.SPEED_LIMIT = 350
         self.FWD_SPEED = 100
         self.MOTOR_POLL_DELAY = 0.05
         # Constants for accurate movement
-        self.DEG_180_TURN = 195
-        self.DEG_90_TURN = 185
+        self.DEG_180_TURN = 200
+        self.DEG_90_TURN = 180
 
         try:
             self.RIGHT_MOTOR.reset_encoder()
@@ -114,7 +114,7 @@ class Wheels:
 
         def deltaAdjust(angle, num_turns):
             ang = angle[0] + (90 * num_turns)
-            print(ang)
+            print(angle[0])
             # Ignore bad data
             Kp = 5
             correction = Kp *ang
@@ -267,7 +267,7 @@ class Wheels:
             
             if found_color:
                 print(f"Found {color}!")
-                return (True, difference)
+                return (True, difference-6)
             
             return (False, 0)
         except IOError as error:

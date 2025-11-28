@@ -6,7 +6,7 @@ import office_scanning as os
 import time
 
 ## Constants to define: 92(23 * 3), 23, 69 (23*3), 46 (23*2), 5
-BLOCK_CM = 22
+BLOCK_CM = 26
 OFFICE_ENTRANCE_DISTANCE_CM = 2
 
 #Counters
@@ -15,7 +15,6 @@ class NavigationSystem:
     def __init__(self, wheels: Wheels, delivery: DeliverySystem, color_sensor: EV3ColorSensor, gyro_sensor: EV3GyroSensor):
         self.wh = wheels
         self.color_sensor = color_sensor
-        self.office_entered = 0
         self.delivery = delivery
         self.count = 0
         self.gyro = gyro_sensor
@@ -42,54 +41,38 @@ class NavigationSystem:
         """
         Navigate to first office on the board (lower left office).
         """
-        self.office_entered += 1
 
         # Move forward towards the corner
-        #self.wh.go_straight(self.D1)
-        self.wh.go_straight_gyro(self.gyro, 6.6, 0)
+        self.wh.go_straight_gyro(self.gyro, 6.7, 0)
 
         # Turn the corner and advance towards the entrance
         self.wh.turn_90_right()
 
         time.sleep(1)
-
-        #self.wh.go_straight(self.CORNER_TO_ENTRANCE)
         self.wh.go_straight_gyro(self.gyro, 0.7, 1)
-
+        time.sleep(1)
+        self.enter_office()        
         time.sleep(1)
 
-        self.enter_office()
-
-        # Detect color to confirm arrival at office, for debugging
-        #detected_color = color_detect.detect_color(self.color_sensor)
-        #print(f"Arrived at office with color: {detected_color}")
-        
-        time.sleep(1)
-
+        self.wh.go_straight(-3)
         self.scan_room()
-
         time.sleep(1)
+        self.wh.go_straight(3)
 
         self.exit_office()
 
        
     def go_to_office2(self):
-
         '''
         Navigate to second office on the board.
         '''
-        self.office_entered += 1
-        
-        #self.wh.go_straight(self.D2)
-
         self.wh.go_straight_gyro(self.gyro, 5.5, 1)
         
         self.wh.turn_90_right()
 
-#        self.wh.go_straight(self.CORNER_TO_ENTRANCE)
-
+        time.sleep(1)
         self.wh.go_straight_gyro(self.gyro, 0.6, 2)
-
+        time.sleep(1)
         self.enter_office()
         
         self.wh.go_straight(-3)
@@ -101,25 +84,22 @@ class NavigationSystem:
         if (self.delivery.count != 2) :
             self.exit_office()    
 
+
     def go_to_office3(self):
         '''
         Navigate to third office on the board.
         '''
-        self.office_entered += 1
-
-        #self.wh.go_straight(self.D2)
-
         self.wh.go_straight_gyro(self.gyro, 5.5, 2)
 
         self.wh.turn_90_right()
-
-#        self.wh.go_straight(self.CORNER_TO_ENTRANCE)
 
         self.wh.go_straight_gyro(self.gyro, 0.7, 3)
 
         self.enter_office()
 
+        self.wh.go_straight(-3)
         self.scan_room()
+        self.wh.go_straight(3)
 
         if (self.count == 2) :
             self.return_to_mailroom_from_office3()
@@ -131,17 +111,16 @@ class NavigationSystem:
         '''
         Navigate to fourth office on the board.
         '''
-        self.office_entered += 1
-
-#        self.wh.go_straight(self.D3)
- 
         self.wh.go_straight_gyro(self.gyro, 4.8, 3)
 
         self.enter_office()
 
+        self.wh.go_straight(-3)
         self.scan_room()
+        self.wh.go_straight(3)
 
         self.return_to_mailroom_from_office4()
+
 
     def return_to_mailroom_from_office2(self):
         '''
@@ -159,6 +138,7 @@ class NavigationSystem:
 
         self.wh.go_straight(30)
 
+
     def return_to_mailroom_from_office3(self):
         '''
         Return to mailroom after delivering at office 3.
@@ -169,6 +149,7 @@ class NavigationSystem:
         self.wh.turn_90_right()
 
         self.wh.go_straight(BLOCK_CM * 2)
+
 
     def return_to_mailroom_from_office4(self):
         '''
@@ -182,6 +163,7 @@ class NavigationSystem:
 
         self.wh.go_straight(BLOCK_CM * 2)
 
+
     def scan_room(self):
         result = os.scanOffice(self.wh, self.color_sensor)
         if result[0] > 0: #when green detected
@@ -192,6 +174,7 @@ class NavigationSystem:
             self.wh.go_straight(7)
             self.wh.reverse_previous_position(result[1], result[2])
             self.wh.go_straight(-result[0])
+
 
 if __name__ == "__main__":
     wheels = Wheels("B", "C")
