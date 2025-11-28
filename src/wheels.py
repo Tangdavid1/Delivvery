@@ -116,7 +116,7 @@ class Wheels:
             ang = angle[0] + (90 * num_turns)
             print(angle[0])
             # Ignore bad data
-            Kp = 5
+            Kp = 3
             correction = Kp *ang
 
             self.LEFT_MOTOR.set_dps(baseDeg + correction)

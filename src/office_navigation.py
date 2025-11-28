@@ -61,6 +61,8 @@ class NavigationSystem:
 
         self.exit_office()
 
+        time.sleep(1)
+
        
     def go_to_office2(self):
         '''
@@ -78,11 +80,13 @@ class NavigationSystem:
         self.wh.go_straight(-3)
 
         self.scan_room()
-
+        time.sleep(1)
         self.wh.go_straight(3)
 
         if (self.delivery.count != 2) :
             self.exit_office()    
+
+        time.sleep(1)
 
 
     def go_to_office3(self):
@@ -105,7 +109,7 @@ class NavigationSystem:
             self.return_to_mailroom_from_office3()
         
         self.exit_office()
-        
+        time.sleep(1)
 
     def go_to_office4(self):
         '''
