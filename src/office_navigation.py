@@ -47,6 +47,9 @@ class NavigationSystem:
 
         # Turn the corner and advance towards the entrance
         self.wh.turn_90_right()
+        time.sleep(1)
+
+        self.wh.adjust_position_gyro(self.gyro, -90)
 
         time.sleep(1)
         self.wh.go_straight_gyro(self.gyro, 0.7, 1)
@@ -54,12 +57,16 @@ class NavigationSystem:
         self.enter_office()        
         time.sleep(1)
 
-        self.wh.go_straight(-3)
+        self.wh.go_straight(-2)
         self.scan_room()
         time.sleep(1)
-        self.wh.go_straight(3)
+        self.wh.go_straight(2)
 
         self.exit_office()
+
+        time.sleep(1)
+
+        #self.wh.adjust_position_gyro(self.gyro, -91)
 
         time.sleep(1)
 
@@ -77,11 +84,11 @@ class NavigationSystem:
         time.sleep(1)
         self.enter_office()
         
-        self.wh.go_straight(-3)
+        self.wh.go_straight(-2)
 
         self.scan_room()
         time.sleep(1)
-        self.wh.go_straight(3)
+        self.wh.go_straight(2)
 
         if (self.delivery.count != 2) :
             self.exit_office()    
@@ -101,9 +108,9 @@ class NavigationSystem:
 
         self.enter_office()
 
-        self.wh.go_straight(-3)
+        self.wh.go_straight(-2)
         self.scan_room()
-        self.wh.go_straight(3)
+        self.wh.go_straight(2)
 
         if (self.count == 2) :
             self.return_to_mailroom_from_office3()

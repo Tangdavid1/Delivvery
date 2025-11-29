@@ -267,7 +267,7 @@ class Wheels:
             
             if found_color:
                 print(f"Found {color}!")
-                return (True, difference-6)
+                return (True, difference)
             
             return (False, 0)
         except IOError as error:
@@ -281,6 +281,25 @@ class Wheels:
         elif direction == "right":
             self.LEFT_MOTOR.set_position_relative(-difference)
             self.wait_for_motor(self.LEFT_MOTOR)
+
+    
+    def adjust_position_gyro(self, gyro_sensor: EV3GyroSensor, desired_angle: int):
+        reading = gyro_sensor.get_value()
+        angle = reading[0]
+        print(angle)
+
+        while angle != desired_angle:
+            if angle < desired_angle:
+                self.RIGHT_MOTOR.set_position_relative(5)
+                self.wait_for_motor(self.RIGHT_MOTOR)
+            elif angle > desired_angle:
+                self.LEFT_MOTOR.set_position_relative(5)
+                self.wait_for_motor(self.LEFT_MOTOR)
+        
+            reading = gyro_sensor.get_value()
+            angle = reading[0]
+            print(angle)
+
             
 
 if __name__ == "__main__":
@@ -290,9 +309,19 @@ if __name__ == "__main__":
     wait_ready_sensors()
     
     # Test moving straight with gyro
-    #wheels.go_straight_gyro(gyro, 6, 0)
-    wheels.turn_90_left_back()
-    wheels.turn_90_right()
-    wheels.turn_90_right_back()
-    wheels.turn_90_left()
-    #wheels.go_straight_gyro(gyro, 6, 1)
+    def test_move_straight():
+        #wheels.go_straight_gyro(gyro, 6, 0)
+        wheels.turn_90_left_back()
+        wheels.turn_90_right()
+        wheels.turn_90_right_back()
+        wheels.turn_90_left()
+        #wheels.go_straight_gyro(gyro, 6, 1)
+    
+    # Test adjusting position with gyro
+    def test_adjust_pos_gyro():
+        wheels.go_straight_gyro(gyro, 3, 0)
+        wheels.turn_90_right()
+        wheels.adjust_position_gyro(gyro, -90)
+        wheels.go_straight_gyro(gyro, 3, 1)
+
+    test_adjust_pos_gyro()
