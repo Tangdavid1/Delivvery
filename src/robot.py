@@ -23,6 +23,7 @@ class Robot:
         if (self.DELIVERY_SYSTEM.count == 2):
             self.NAVIGATION_SYSTEM.return_to_mailroom_from_office2()
             self.DELIVERY_SYSTEM.play_sound_once_all_is_visited()
+            reset_brick()
             return
         
         self.NAVIGATION_SYSTEM.go_to_office3()
@@ -30,10 +31,13 @@ class Robot:
         if (self.DELIVERY_SYSTEM.count == 2):
             self.NAVIGATION_SYSTEM.return_to_mailroom_from_office3()
             self.DELIVERY_SYSTEM.play_sound_once_all_is_visited()
+            reset_brick()
             return
         
         self.NAVIGATION_SYSTEM.go_to_office4()
+        self.DELIVERY_SYSTEM.play_sound_once_all_is_visited()
         
+        reset_brick()
         
 
 if __name__ == "__main__":

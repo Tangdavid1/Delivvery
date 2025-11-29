@@ -25,6 +25,13 @@ def scanningProcess(wheels: Wheels, color_sensor: EV3ColorSensor, color: str) ->
 
 
 def scanOffice(wheels: Wheels, color_sensor: EV3ColorSensor) -> tuple[int, str, int]:
+    # start by going a little straight and checking
+    if wheels.go_straight_check_red(3, color_sensor):
+        wheels.go_straight(-3)
+        return (0, "none", 0)
+    
+    wheels.go_straight(-3)
+
     result = scanningProcess(wheels, color_sensor, "red")
     if result[0]:
         wheels.reverse_previous_position(result[1], result[2])

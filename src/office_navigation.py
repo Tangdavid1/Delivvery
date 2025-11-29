@@ -41,9 +41,9 @@ class NavigationSystem:
         """
         Navigate to first office on the board (lower left office).
         """
-
+        time.sleep(1)
         # Move forward towards the corner
-        self.wh.go_straight_gyro(self.gyro, 6.7, 0)
+        self.wh.go_straight_gyro(self.gyro, 6.6, 0)
 
         # Turn the corner and advance towards the entrance
         self.wh.turn_90_right()
@@ -56,11 +56,11 @@ class NavigationSystem:
         time.sleep(1)
         self.enter_office()        
         time.sleep(1)
-
+        
         self.wh.go_straight(-2)
         self.scan_room()
         time.sleep(1)
-        self.wh.go_straight(2)
+        self.wh.go_straight(3)
 
         self.exit_office()
 
@@ -75,12 +75,12 @@ class NavigationSystem:
         '''
         Navigate to second office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 5.5, 1)
+        self.wh.go_straight_gyro(self.gyro, 5.4, 1)
         
         self.wh.turn_90_right()
 
         time.sleep(1)
-        self.wh.go_straight_gyro(self.gyro, 0.6, 2)
+        self.wh.go_straight_gyro(self.gyro, 0.5, 2)
         time.sleep(1)
         self.enter_office()
         
@@ -88,7 +88,7 @@ class NavigationSystem:
 
         self.scan_room()
         time.sleep(1)
-        self.wh.go_straight(2)
+        self.wh.go_straight(3)
 
         if (self.delivery.count != 2) :
             self.exit_office()    
@@ -100,17 +100,20 @@ class NavigationSystem:
         '''
         Navigate to third office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 5.5, 2)
+        self.wh.go_straight_gyro(self.gyro, 5.2, 2)
 
         self.wh.turn_90_right()
 
-        self.wh.go_straight_gyro(self.gyro, 0.7, 3)
+        time.sleep(1)
+        self.wh.go_straight_gyro(self.gyro, 0.5, 3)
+        time.sleep(1)
 
         self.enter_office()
 
         self.wh.go_straight(-2)
         self.scan_room()
-        self.wh.go_straight(2)
+        time.sleep(1)
+        self.wh.go_straight(3)
 
         if (self.count == 2) :
             self.return_to_mailroom_from_office3()
@@ -122,7 +125,7 @@ class NavigationSystem:
         '''
         Navigate to fourth office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 4.8, 3)
+        self.wh.go_straight_gyro(self.gyro, 4.2, 3)
 
         self.enter_office()
 
@@ -147,7 +150,7 @@ class NavigationSystem:
 
         self.wh.turn_90_left()
 
-        self.wh.go_straight(30)
+        self.wh.go_straight(35)
 
 
     def return_to_mailroom_from_office3(self):
@@ -159,7 +162,7 @@ class NavigationSystem:
 
         self.wh.turn_90_right()
 
-        self.wh.go_straight(BLOCK_CM * 2)
+        self.wh.go_straight(35)
 
 
     def return_to_mailroom_from_office4(self):
@@ -172,7 +175,7 @@ class NavigationSystem:
         
         self.wh.turn_90_left()
 
-        self.wh.go_straight(BLOCK_CM * 2)
+        self.wh.go_straight(35)
 
 
     def scan_room(self):

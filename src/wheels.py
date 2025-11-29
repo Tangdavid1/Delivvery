@@ -88,6 +88,21 @@ class Wheels:
         except IOError as error:
             print(error)
 
+    def go_straight_check_red(self, distance_cm, color_sensor):
+        """
+        Makes the robot go straight a certain distance. Both wheels move forward.
+        """
+        deg_to_move = int(distance_cm*self.DISTANCE_TO_DEG)
+        try:
+            self.LEFT_MOTOR.set_position_relative(deg_to_move)
+            self.RIGHT_MOTOR.set_position_relative(deg_to_move)
+            if self.wait_for_motor_while_check_color(self.RIGHT_MOTOR, "red", color_sensor):
+                return True
+            return False
+        except IOError as error:
+            print(error)
+
+
     
     def go_straight_gyro(self, gyro: EV3GyroSensor, time_to_move, number_turns):
         """
@@ -116,7 +131,7 @@ class Wheels:
             ang = angle[0] + (90 * num_turns)
             print(angle[0])
             # Ignore bad data
-            Kp = 3
+            Kp = 2
             correction = Kp *ang
 
             self.LEFT_MOTOR.set_dps(baseDeg + correction)
