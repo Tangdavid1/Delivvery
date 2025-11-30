@@ -1,14 +1,15 @@
-from utils.brick import Motor, EV3ColorSensor, EV3GyroSensor, wait_ready_sensors
+from utils.brick import Motor, EV3ColorSensor, EV3GyroSensor, TouchSensor, reset_brick, wait_ready_sensors
 import time
 import math
 import color_utils.color_detect as color_detect
 
 class Wheels:
     # Initializer
-    def __init__(self, left_wheel_port="B", right_wheel_port="C"):
+    def __init__(self, left_wheel_port="B", right_wheel_port="C", touch_sensor_port=4):
         # Initialize motors
         self.RIGHT_MOTOR = Motor(right_wheel_port)
         self.LEFT_MOTOR = Motor(left_wheel_port)
+        self.TOUCH_SENSOR = TouchSensor(touch_sensor_port)
         # Constant values
         self.WHEEL_DIAMETER_CM = 4.3
         self.WHEEL_RADIUS_CM = self.WHEEL_DIAMETER_CM/2
@@ -53,8 +54,16 @@ class Wheels:
         Waits for the given motor to complete its movement.
         """
         while math.isclose(motor.get_speed(), 0):
+            if self.TOUCH_SENSOR.is_pressed():
+                reset_brick()
+                raise IOError("Emergency Stop activated, stopping everything.")
+            
             time.sleep(self.MOTOR_POLL_DELAY)
         while not math.isclose(motor.get_speed(), 0):
+            if self.TOUCH_SENSOR.is_pressed():
+                reset_brick()
+                raise IOError("Emergency Stop activated, stopping everything.")
+            
             time.sleep(self.MOTOR_POLL_DELAY)
     
 
@@ -64,8 +73,16 @@ class Wheels:
         color we are looking for.
         """
         while math.isclose(motor.get_speed(), 0):
+            if self.TOUCH_SENSOR.is_pressed():
+                reset_brick()
+                raise IOError("Emergency Stop activated, stopping everything.")
+            
             time.sleep(self.MOTOR_POLL_DELAY)
         while not math.isclose(motor.get_speed(), 0):
+            if self.TOUCH_SENSOR.is_pressed():
+                reset_brick()
+                raise IOError("Emergency Stop activated, stopping everything.")
+            
             rgb = color_sensor.get_rgb()
             while(rgb[0]==None or rgb[1]==None or rgb[2]==None):
                 rgb = color_sensor.get_rgb()
@@ -128,6 +145,9 @@ class Wheels:
             self.RIGHT_MOTOR.set_dps(baseDeg)
 
         def deltaAdjust(angle, num_turns):
+            if self.TOUCH_SENSOR.is_pressed():
+                raise IOError("Emergency Stop activated, stopping everything.")
+
             ang = angle[0] + (90 * num_turns)
             print(angle[0])
             # Ignore bad data
@@ -165,10 +185,9 @@ class Wheels:
                     if now - side_start_time >= side_ultrasonic_duration:
                         stop()
                         break
-
-        except KeyboardInterrupt:
-            stop()
-            print("Stopped.")
+            
+        except KeyboardInterrupt as error:
+            print(error)
 
 
     def turn_180(self, right_left_not: bool):

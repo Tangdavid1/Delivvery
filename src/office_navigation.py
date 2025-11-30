@@ -125,7 +125,7 @@ class NavigationSystem:
         '''
         Navigate to fourth office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 4.2, 3)
+        self.wh.go_straight_gyro(self.gyro, 3.8, 3)
 
         self.enter_office()
 
