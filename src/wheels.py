@@ -121,7 +121,7 @@ class Wheels:
 
 
     
-    def go_straight_gyro(self, gyro: EV3GyroSensor, time_to_move, number_turns):
+    def go_straight_gyro(self, gyro: EV3GyroSensor, time_to_move, wanted_angle):
         """
         Goes straight and with good orientation thanks to the gyro sensor
         """
@@ -144,11 +144,11 @@ class Wheels:
             self.LEFT_MOTOR.set_dps(baseDeg)
             self.RIGHT_MOTOR.set_dps(baseDeg)
 
-        def deltaAdjust(angle, num_turns):
+        def deltaAdjust(angle, wanted_angle):
             if self.TOUCH_SENSOR.is_pressed():
                 raise IOError("Emergency Stop activated, stopping everything.")
 
-            ang = angle[0] + (90 * num_turns)
+            ang = angle[0] + (wanted_angle)
             print(angle[0])
             # Ignore bad data
             Kp = 2
@@ -166,6 +166,7 @@ class Wheels:
         try:
             forward()
             while True:
+       
                 #State 1(Ultrasonic Sensor is ON)
                 #Ultrasonic sesnor is ON for the first 10 seconds
                 if state == "side_ultrasonic_on":
@@ -177,15 +178,15 @@ class Wheels:
                         if angle is not None:
                      #       print("Angle:", angle, "deg")
 
-                            deltaAdjust(angle, number_turns)
+                            deltaAdjust(angle, wanted_angle)
                         #Reset the timer
                         last_ultrasonic_check_time = now
-
-                    #Turn off the ultrasonic sensor after 10 seconds
+                           #Turn off the ultrasonic sensor after 10 seconds
                     if now - side_start_time >= side_ultrasonic_duration:
                         stop()
                         break
             
+
         except KeyboardInterrupt as error:
             print(error)
 

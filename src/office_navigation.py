@@ -52,7 +52,7 @@ class NavigationSystem:
         self.wh.adjust_position_gyro(self.gyro, -90)
 
         time.sleep(1)
-        self.wh.go_straight_gyro(self.gyro, 0.7, 1)
+        self.wh.go_straight_gyro(self.gyro, 0.7, 90)
         time.sleep(1)
         self.enter_office()        
         time.sleep(1)
@@ -66,7 +66,7 @@ class NavigationSystem:
 
         time.sleep(1)
 
-        #self.wh.adjust_position_gyro(self.gyro, -91)
+        #self.wh.adjust_position_gyro(self.gyro, -90)
 
         time.sleep(1)
 
@@ -75,12 +75,23 @@ class NavigationSystem:
         '''
         Navigate to second office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 5.4, 1)
+        # Poll the gyro to see what it's currently reading
+        angle = self.gyro.get_value()[0]
+        
+        # move straight according to what the gyro is reading
+        
+        if angle < -90:
+            self.wh.go_straight_gyro(self.gyro, 5.5, 92)
+        elif angle > -90:
+            self.wh.go_straight_gyro(self.gyro, 5.5, 80)
+        elif angle == -90:
+            self.wh.go_straight_gyro(self.gyro, 5.5, 90)
         
         self.wh.turn_90_right()
 
+        #self.wh.adjust_position_gyro(self.gyro, -180)
         time.sleep(1)
-        self.wh.go_straight_gyro(self.gyro, 0.5, 2)
+        self.wh.go_straight_gyro(self.gyro, 0.5, 180)
         time.sleep(1)
         self.enter_office()
         
@@ -92,7 +103,8 @@ class NavigationSystem:
 
         if (self.delivery.count != 2) :
             self.exit_office()    
-
+            #self.wh.adjust_position_gyro(self.gyro, -180)
+        
         time.sleep(1)
 
 
@@ -100,12 +112,23 @@ class NavigationSystem:
         '''
         Navigate to third office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 5.2, 2)
+        # Poll the gyro to see what it's currently reading
+        angle = self.gyro.get_value()[0]
+        
+        if angle < -180:
+            self.wh.go_straight_gyro(self.gyro, 5.5, 186)
+        elif angle > -180:
+            self.wh.go_straight_gyro(self.gyro, 5.5, 173)
+        elif angle == -180:
+            self.wh.go_straight_gyro(self.gyro, 5.5, 180)
+        
+        #self.wh.go_straight_gyro(self.gyro, 5.4, 186)
 
         self.wh.turn_90_right()
 
+        #self.wh.adjust_position_gyro(self.gyro, -270)
         time.sleep(1)
-        self.wh.go_straight_gyro(self.gyro, 0.5, 3)
+        self.wh.go_straight_gyro(self.gyro, 0.5, 270)
         time.sleep(1)
 
         self.enter_office()
@@ -119,13 +142,26 @@ class NavigationSystem:
             self.return_to_mailroom_from_office3()
         
         self.exit_office()
+        #self.wh.adjust_position_gyro(self.gyro, -270)
         time.sleep(1)
 
     def go_to_office4(self):
         '''
         Navigate to fourth office on the board.
         '''
-        self.wh.go_straight_gyro(self.gyro, 3.8, 3)
+        # Poll the gyro to see what it's currently reading
+        angle = self.gyro.get_value()[0]
+        
+        if angle < -280:
+            self.wh.go_straight_gyro(self.gyro, 3.8, 280)
+        elif angle < -270:
+            self.wh.go_straight_gyro(self.gyro, 3.8, 273)
+        elif angle > -270:
+            self.wh.go_straight_gyro(self.gyro, 3.8, 260)
+        elif angle == -270:
+            self.wh.go_straight_gyro(self.gyro, 3.8, 270)
+        
+        #self.wh.go_straight_gyro(self.gyro, 3.8, 283)
 
         self.enter_office()
 
@@ -150,7 +186,8 @@ class NavigationSystem:
 
         self.wh.turn_90_left()
 
-        self.wh.go_straight(35)
+        #self.wh.go_straight(35)
+        self.wh.go_straight_gyro(self.gyro, 3.0, 183)
 
 
     def return_to_mailroom_from_office3(self):
@@ -162,7 +199,8 @@ class NavigationSystem:
 
         self.wh.turn_90_right()
 
-        self.wh.go_straight(35)
+        #self.wh.go_straight(35)
+        self.wh.go_straight_gyro(self.gyro, 3.0, 360)
 
 
     def return_to_mailroom_from_office4(self):
@@ -175,7 +213,8 @@ class NavigationSystem:
         
         self.wh.turn_90_left()
 
-        self.wh.go_straight(35)
+        #self.wh.go_straight(35)
+        self.wh.go_straight_gyro(self.gyro, 3.0, 360)
 
 
     def scan_room(self):
