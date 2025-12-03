@@ -45,10 +45,5 @@ if __name__ == "__main__":
     #Process a single office
     try:
         robot.play()
-        #robot.NAVIGATION_SYSTEM.scan_room()
     except IOError:
         reset_brick()
-
-
-
-    
